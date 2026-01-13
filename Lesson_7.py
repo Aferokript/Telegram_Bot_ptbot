@@ -16,7 +16,8 @@ def render_progressbar(total, iteration, prefix='', suffix='', length=30, fill='
 
 def notify_progress(chat_id, message_id, secs_left, total_seconds):
     progress = render_progressbar(total_seconds, total_seconds - secs_left)
-    bot.update_message(chat_id, message_id, f'Осталось {progress}')
+    bot.update_message(chat_id, message_id, f'Осталось'
+    f' {progress}')
 
 
 def timer_finished(chat_id, message_id, text):
@@ -34,9 +35,8 @@ def main():
     load_dotenv()
     TG_TOKEN = os.environ['TOKEN']
     TG_CHAT_ID = 7280963930
-    global bot
     bot = ptbot.Bot(TG_TOKEN)
-    bot.reply_on_message(handle_message)
+    bot.reply_on_message(handle_message, bot=bot)
     bot.run_bot()
 
 
