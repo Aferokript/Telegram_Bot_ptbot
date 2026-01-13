@@ -14,28 +14,28 @@ def render_progressbar(total, iteration, prefix='', suffix='', length=30, fill='
     return '{0} |{1}| {2}% {3}'.format(prefix, pbar, percent, suffix)
 
 
-def notify_progress(chat_id, message_id, secs_left, total_seconds):
+def notify_progress(chat_id, message_id, secs_left, total_seconds, bot):
     progress = render_progressbar(total_seconds, total_seconds - secs_left)
     bot.update_message(chat_id, message_id, f'Осталось'
     f' {progress}')
 
 
-def timer_finished(chat_id, message_id, text):
+def timer_finished(chat_id, message_id, text, bot):
     bot.update_message(chat_id, message_id, f"Время вышло! Вы устанавливали: '{text}'")
 
 
-def handle_message(chat_id, text):
+def handle_message(chat_id, text, bot):
     seconds = pytimeparse.parse(text)
     message_id = bot.send_message(chat_id, f"Таймер установлен на {seconds} секунд...")
-    bot.create_countdown(seconds, notify_progress, chat_id, message_id, seconds)
-    bot.create_timer(seconds, timer_finished, chat_id, message_id, text)
+    bot.create_countdown(seconds, notify_progress, chat_id, message_id, seconds, bot=bot)
+    bot.create_timer(seconds, timer_finished, chat_id, message_id, text, bot=bot)
 
 
 def main():
     load_dotenv()
-    TG_TOKEN = os.environ['TOKEN']
-    TG_CHAT_ID = os.environ['TG_CHAT_ID']
-    bot = ptbot.Bot(TG_TOKEN)
+    tg_token = os.environ['TOKEN']
+    tg_chat_id = os.environ['TG_CHAT_ID']
+    bot = ptbot.Bot(tg_token)
     bot.reply_on_message(handle_message, bot=bot)
     bot.run_bot()
 
