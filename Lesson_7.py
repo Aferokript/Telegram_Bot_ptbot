@@ -34,7 +34,7 @@ def handle_message(chat_id, text):
 def main():
     load_dotenv()
     TG_TOKEN = os.environ['TOKEN']
-    TG_CHAT_ID = 7280963930
+    TG_CHAT_ID = os.environ['TG_CHAT_ID']
     bot = ptbot.Bot(TG_TOKEN)
     bot.reply_on_message(handle_message, bot=bot)
     bot.run_bot()
